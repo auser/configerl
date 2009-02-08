@@ -1,7 +1,7 @@
 -module (config).
 
 %% API
--export([parse/2, update/3, delete/2]).
+-export([parse/2, update/3, delete/2, append/2]).
 
 parse(Key, Config) ->
 	get(Key, Config).
@@ -12,6 +12,11 @@ update(Key, Value, Config) ->
 	
 delete(Key, Config) ->
 	[ T || T <- Config, element(1, T) =/= Key].
+
+append(Config, Other) ->
+	DFun = fun(Key, Value, Array) -> lists:append(delete(Key, Array), [{Key, Value}]) end,
+	[NewConfig] = [ DFun(Key, Value, Config) || {Key, Value} <- Other ],
+	NewConfig.
 
 get(Key, Arr) ->
 	Out = [ T || T <- Arr, element(1, T) =:= Key],

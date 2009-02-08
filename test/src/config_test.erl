@@ -19,5 +19,14 @@ update_test_() ->
 delete_test_() ->
 	Config = [{pig, "bob"}, {cow, "betsy"}],
   [
-    ?_assert( [{pig, "bob"}] == config:delete(cow, Config) )
+    ?_assert( [{pig, "bob"}] == config:delete(cow, Config) ),
+		?_assert( Config == config:delete(bird, Config) )
+  ].
+
+append_test_() ->
+	Config = [{pig, "bob"}, {cow, "betsy"}],
+	Other = [{pig, "park"}],
+  [
+    ?_assert( [{cow, "betsy"}, {pig, "park"}] == config:append(Config, Other) ),
+		?_assert( [{pig, "bob"}, {cow, "betsy"}, {bird, "ned"}] == config:append(Config, [{bird, "ned"}]) )
   ].
