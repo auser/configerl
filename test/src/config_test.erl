@@ -15,3 +15,9 @@ update_test_() ->
 		?_assert( [{cow, "betsy"},{pig, 10}] == config:update(pig, 10, Config) ),
 		?_assert( [{pig, "bob"}, {cow, "betsy"}, {dave, "dave"}] == config:update(dave, "dave", Config) )
 	].
+
+delete_test_() ->
+	Config = [{pig, "bob"}, {cow, "betsy"}],
+  [
+    ?_assert( [{pig, "bob"}] == config:delete(cow, Config) )
+  ].
