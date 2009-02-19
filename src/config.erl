@@ -1,10 +1,21 @@
 -module (config).
 
 %% API
--export([parse/2, update/3, delete/2, append/2]).
+-export([parse/2, update/3, delete/2, append/2, fetch/2]).
 
 parse(Key, Config) ->
 	get(Key, Config).
+
+fetch(Keys, Config) ->
+	fetch0(Keys, Config, []).
+
+fetch0([], _, Acc) -> Acc;
+fetch0([Key|Keys], Config, Acc) ->
+	NewAcc = case get(Key, Config) of
+		{} -> Acc;
+		Val -> Acc ++ [Val]
+	end,
+	fetch0(Keys, Config, NewAcc).
 
 update(Key, Value, Config) ->
 	NewConfig = [ T || T <- Config, element(1, T) =/= Key],

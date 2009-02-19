@@ -30,3 +30,11 @@ append_test_() ->
     ?_assert( [{cow, "betsy"}, {pig, "park"}] == config:append(Config, Other) ),
 		?_assert( [{pig, "bob"}, {cow, "betsy"}, {bird, "ned"}] == config:append(Config, [{bird, "ned"}]) )
   ].
+
+fetch_test_() ->
+  [		
+    ?_assert( [1,2] == config:fetch([pig, cow], [{pig, 1}, {cow, 2}, {horse, 3}]) ),
+		?_assert( [1] == config:fetch([pig], [{pig, 1}, {cow, 2}, {horse, 3}]) ),
+		?_assert( [1,3] == config:fetch([pig, donkey, horse], [{pig, 1}, {cow, 2}, {horse, 3}]) ),
+		?_assert( [] == config:fetch([duck, goose], [{pig, 1}, {cow, 2}, {horse, 3}]) )
+  ].
