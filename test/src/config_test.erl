@@ -38,3 +38,9 @@ fetch_test_() ->
 		?_assert( [1,3] == config:fetch([pig, donkey, horse], [{pig, 1}, {cow, 2}, {horse, 3}]) ),
 		?_assert( [] == config:fetch([duck, goose], [{pig, 1}, {cow, 2}, {horse, 3}]) )
   ].
+
+parse_or_default_test_() ->
+  [
+    ?_assert( 1 == config:parse_or_default(duck, [{duck, 1}, {cow, 2}], 4) ),
+		?_assert( 4 == config:parse_or_default(hen, [{duck, 1}, {cow, 2}], 4) )
+  ].

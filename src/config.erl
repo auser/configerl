@@ -1,10 +1,15 @@
 -module (config).
 
 %% API
--export([parse/2, update/3, delete/2, append/2, fetch/2]).
+-export([parse/2, update/3, delete/2, append/2, fetch/2, parse_or_default/3]).
 
-parse(Key, Config) ->
-	get(Key, Config).
+parse_or_default(Key, Config, Default) ->
+	case parse(Key, Config) of
+		{} -> Default;
+		Val -> Val
+	end.
+	
+parse(Key, Config) ->	get(Key, Config).
 
 fetch(Keys, Config) ->
 	fetch0(Keys, Config, []).
