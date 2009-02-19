@@ -1,7 +1,8 @@
 -module (config).
 
 %% API
--export([parse/2, update/3, delete/2, append/2, fetch/2, parse_or_default/3]).
+-export([parse/2, update/3, delete/2, append/2, fetch/2, 
+					parse_or_default/3, fetch_or_default/3, fetch_or_default_config/3]).
 
 parse_or_default(Key, Config, Default) ->
 	case parse(Key, Config) of
@@ -10,6 +11,24 @@ parse_or_default(Key, Config, Default) ->
 	end.
 	
 parse(Key, Config) ->	get(Key, Config).
+
+fetch_or_default_config(Keys, Config, DefaultConfig) ->
+	fetch_or_default_config0(Keys, Config, DefaultConfig, []).
+
+fetch_or_default_config0([], _, _, Acc) -> Acc;
+fetch_or_default_config0([Key|Keys], Config, DefaultConfig, Acc) ->
+	DefVal = parse_or_default(Key, DefaultConfig, undefined),
+	Val = parse_or_default(Key, Config, DefVal),
+	fetch_or_default_config0(Keys, Config, DefaultConfig, Acc ++ [Val]).
+
+fetch_or_default(Keys, Config, Defaults) ->
+	fetch_or_default0(Keys, Config, Defaults, []).
+
+fetch_or_default0([], _, _, Acc) -> Acc;
+fetch_or_default0([Key|Keys], Config, [], Acc) -> fetch_or_default0([Key|Keys], Config, [undefined], Acc);
+fetch_or_default0([Key|Keys], Config, [KeyDefault|Defaults], Acc) ->
+	Val = parse_or_default(Key, Config, KeyDefault),
+	fetch_or_default0(Keys, Config, Defaults, Acc ++ [Val]).
 
 fetch(Keys, Config) ->
 	fetch0(Keys, Config, []).

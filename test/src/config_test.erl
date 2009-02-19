@@ -44,3 +44,19 @@ parse_or_default_test_() ->
     ?_assert( 1 == config:parse_or_default(duck, [{duck, 1}, {cow, 2}], 4) ),
 		?_assert( 4 == config:parse_or_default(hen, [{duck, 1}, {cow, 2}], 4) )
   ].
+
+fetch_or_default_test_() ->
+  [
+    ?_assert( [1,2] == config:fetch_or_default([pig, cow], [{pig, 1}, {cow, 2}, {horse, 3}], ["hat", "box"])),
+		?_assert( [1,2,"hat"] == config:fetch_or_default([pig, cow, bird], [{pig, 1}, {cow, 2}, {horse, 3}], ["hat", "box", "hat"]) ),
+		?_assert( [1,2,undefined] == config:fetch_or_default([pig, cow, bird], [{pig, 1}, {cow, 2}, {horse, 3}], ["hat", "box"]) )
+  ].
+
+fetch_or_default_config_test_() ->
+	DefaultConfig = [{bird, "frank"}, {dog, "joe"}, {cow, "patsy"}],
+	Config = [{cow, "jerk"}],
+	[
+		?_assert( ["frank", "joe"] == config:fetch_or_default_config([bird, dog], Config, DefaultConfig) ),
+		?_assert( ["frank", "jerk"] == config:fetch_or_default_config([bird, cow], Config, DefaultConfig) ),
+		?_assert( [undefined, "jerk"] == config:fetch_or_default_config([penguin, cow], Config, DefaultConfig) )
+	].
